@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+    <name>neo_kinematics_omnidrive2</name>
+    <version>1.0.0</version>
+    <description>
+		Omni-directional kinematics and motor controller interface.
+    </description>
+    <author>Max Wittal</author>
+    <author>wittal@neobotix.de</author>
+    <maintainer email="ros@neobotix.de">Neobotix GmbH</maintainer>
+    <maintainer email="wittal@neobotix.de">Max Wittal</maintainer>
+    <maintainer email="padmanabhan@neobotix.de">Max Wittal</maintainer>
+
+    <license>BSD</license>
+
+    <buildtool_depend>ament_cmake</buildtool_depend>
+
+    <exec_depend>rclcpp</exec_depend>
+    <exec_depend>rclcpp_action</exec_depend>
+    <exec_depend>rclcpp_lifecycle</exec_depend>
+    <exec_depend>visualization_msgs</exec_depend>
+    <exec_depend>geometry_msgs</exec_depend>
+    <exec_depend>std_msgs</exec_depend>
+    <exec_depend>nav_msgs</exec_depend>
+    <exec_depend>sensor_msgs</exec_depend>
+    <exec_depend>trajectory_msgs</exec_depend>
+    <exec_depend>builtin_interfaces</exec_depend>
+    <exec_depend>tf2</exec_depend>
+    <exec_depend>tf2_ros</exec_depend>
+    <exec_depend>tf2_geometry_msgs</exec_depend>
+    <exec_depend>neo_srvs2</exec_depend>
+    <exec_depend>neo_msgs2</exec_depend>
+    <exec_depend>neo_common2</exec_depend>
+
+
+
+
+    <export>
+     <build_type>ament_cmake</build_type>
+    </export>
+
+</package>
+
+
