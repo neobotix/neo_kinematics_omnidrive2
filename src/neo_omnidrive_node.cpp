@@ -61,6 +61,7 @@ class NeoOmniDriveNode : public rclcpp::Node {
 public:
 	NeoOmniDriveNode(): Node("neo_omnidrive_node")
 	{
+        this->declare_parameter<double>("control_rate", 50.0);
 		this->declare_parameter<bool>("broadcast_tf", true);
         this->declare_parameter<int>("num_wheels", 3);
         this->declare_parameter<double>("wheel_radius", 0.0);

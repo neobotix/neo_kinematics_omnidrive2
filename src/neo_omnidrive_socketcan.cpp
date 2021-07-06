@@ -537,6 +537,11 @@ public:
 		}
 	}
 
+	inline double get_control_rate()
+	{
+		return m_control_rate;
+	}
+
 private:
 	void joint_trajectory_callback(const trajectory_msgs::msg::JointTrajectory::SharedPtr joint_trajectory)
 	{
@@ -1555,11 +1560,9 @@ int main(int argc, char** argv)
 {
 	// initialize ROS
 	rclcpp::init(argc, argv);
-	double control_rate = 0;   // [1/s]
 	auto nh = std::make_shared<NeoSocketCanNode>();
 
-	nh->declare_parameter<double>("control_rate", 50.0);
-	nh->get_parameter("control_rate", control_rate);
+	double control_rate = nh->get_control_rate();   // [1/s]
 
 	// frequency of publishing states (cycle time)
 	rclcpp::Rate loop_rate(control_rate);
