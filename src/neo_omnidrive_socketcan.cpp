@@ -120,11 +120,11 @@ public:
 			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".can_id", i*10);
 			this->declare_parameter<int32_t>("drive"+ std::to_string(i) + ".rot_sign", i*10);
 			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".rot_sign", i*10);
-			this->declare_parameter<double>("drive"+ std::to_string(i) + ".gear_ratio", i*10);
-			this->declare_parameter<double>("steer"+ std::to_string(i) + ".gear_ratio", i*10);
+			this->declare_parameter<int32_t>("drive"+ std::to_string(i) + ".gear_ratio", i*10);
+			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".gear_ratio", i*10);
 			this->declare_parameter<int32_t>("drive"+ std::to_string(i) + ".enc_ticks_per_rev", i*10);
 			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".enc_ticks_per_rev", i*10);
-			this->declare_parameter<double>("steer"+ std::to_string(i) + ".home_angle", i*10);
+			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".home_angle", i*10);
 			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".home_dig_in", i*10);
 			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".enc_home_offset", i*10);
 
