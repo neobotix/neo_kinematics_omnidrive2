@@ -197,6 +197,11 @@ public:
 		m_pub_joint_trajectory->publish(joint_trajectory);
 	}
 
+	inline double get_control_rate()
+	{
+		return m_control_rate;
+	}
+
 private:
 	void cmd_vel_callback(const geometry_msgs::msg::Twist::SharedPtr twist)
 	{
@@ -448,9 +453,7 @@ int main(int argc, char** argv)
 	// initialize ROS
 	rclcpp::init(argc, argv);
 	auto nh = std::make_shared<NeoOmniDriveNode>();
-	double control_rate = 100;   // [1/s]
-	nh->declare_parameter<double>("control_rate", 50.0);
-	nh->get_parameter_or("control_rate", control_rate, 50.0);
+	double control_rate = nh->get_control_rate();   // [1/s]
 	rclcpp::Rate loop_rate(control_rate);
 
 	try{
