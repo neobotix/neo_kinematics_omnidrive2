@@ -226,7 +226,7 @@ public:
 		motor_t steer;
 
 		int32_t home_dig_in = 0;				// digital input for homing switch
-		double home_angle = 0;					// home steering angle in rad
+		int32_t home_angle = 0;					// home steering angle in rad
 
 		double target_wheel_vel = 0;			// current wheel velocity target in rad/s
 		double target_steer_pos = 0;			// current steering target angle in rad
