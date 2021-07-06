@@ -130,7 +130,7 @@ public:
 		
 
 		m_sub_cmd_vel = this->create_subscription<geometry_msgs::msg::Twist>("/cmd_vel", 1, std::bind(&NeoOmniDriveNode::cmd_vel_callback, this, _1));
-		m_sub_joint_state = this->create_subscription<sensor_msgs::msg::JointState>("/joint_states", 1, std::bind(&NeoOmniDriveNode::joint_state_callback, this, _1));
+		m_sub_joint_state = this->create_subscription<sensor_msgs::msg::JointState>("/drives/joint_states", 1, std::bind(&NeoOmniDriveNode::joint_state_callback, this, _1));
 
 		m_sub_joy = this->create_subscription<sensor_msgs::msg::Joy>("/joy", 1, std::bind(&NeoOmniDriveNode::joy_callback, this, _1));
 
