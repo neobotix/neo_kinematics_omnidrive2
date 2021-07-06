@@ -23,7 +23,7 @@ neo_omnidrive_node:
       can_id: 2
       joint_name: mpo_700_wheel_front_left_joint
       rot_sign: -1
-      gear_ratio: 30.0
+      gear_ratio: 30
       enc_ticks_per_rev: 10000
     steer0:
       can_id: 1
@@ -33,7 +33,7 @@ neo_omnidrive_node:
       rot_sign: 1
       gear_ratio: 19
       enc_ticks_per_rev: 10000
-      home_angle: 180.0
+      home_angle: 180
       home_dig_in: 9
       enc_home_offset: 5433
 
@@ -51,7 +51,7 @@ neo_omnidrive_node:
       rot_sign: -1
       gear_ratio: 19
       enc_ticks_per_rev: 10000
-      home_angle: 180.0
+      home_angle: 180
       home_dig_in: 9
       enc_home_offset: -6296
 
@@ -69,7 +69,7 @@ neo_omnidrive_node:
       rot_sign: 1
       gear_ratio: 19
       enc_ticks_per_rev: 10000
-      home_angle: 0.0
+      home_angle: 0
       home_dig_in: 9
       enc_home_offset: 5641
 
@@ -87,7 +87,7 @@ neo_omnidrive_node:
       rot_sign: -1
       gear_ratio: 19
       enc_ticks_per_rev: 10000
-      home_angle: 0.0
+      home_angle: 0
       home_dig_in: 9
       enc_home_offset: -6186
 

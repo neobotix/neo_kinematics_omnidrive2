@@ -120,11 +120,11 @@ public:
 			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".can_id", i*10);
 			this->declare_parameter<int32_t>("drive"+ std::to_string(i) + ".rot_sign", i*10);
 			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".rot_sign", i*10);
-			this->declare_parameter<double>("drive"+ std::to_string(i) + ".gear_ratio", i*10);
-			this->declare_parameter<double>("steer"+ std::to_string(i) + ".gear_ratio", i*10);
+			this->declare_parameter<int32_t>("drive"+ std::to_string(i) + ".gear_ratio", i*10);
+			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".gear_ratio", i*10);
 			this->declare_parameter<int32_t>("drive"+ std::to_string(i) + ".enc_ticks_per_rev", i*10);
 			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".enc_ticks_per_rev", i*10);
-			this->declare_parameter<double>("steer"+ std::to_string(i) + ".home_angle", i*10);
+			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".home_angle", i*10);
 			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".home_dig_in", i*10);
 			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".enc_home_offset", i*10);
 
@@ -204,7 +204,7 @@ public:
 		int32_t can_Rx_PDO2 = -1;
 		int32_t can_Tx_SDO = -1;
 		int32_t can_Rx_SDO = -1;
-		double gear_ratio = 0;					// gear ratio
+		int32_t gear_ratio = 0;					// gear ratio
 		double torque_constant = 0;				// conversion factor from current to torque
 
 		motor_state_e state = ST_PRE_INITIALIZED;
