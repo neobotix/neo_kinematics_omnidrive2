@@ -124,7 +124,7 @@ public:
 			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".gear_ratio", i*10);
 			this->declare_parameter<int32_t>("drive"+ std::to_string(i) + ".enc_ticks_per_rev", i*10);
 			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".enc_ticks_per_rev", i*10);
-			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".home_angle", i*10);
+			this->declare_parameter<double>("steer"+ std::to_string(i) + ".home_angle", i*10);
 			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".home_dig_in", i*10);
 			this->declare_parameter<int32_t>("steer"+ std::to_string(i) + ".enc_home_offset", i*10);
 
@@ -172,7 +172,7 @@ public:
 
 			m_wheels[i].home_angle = M_PI * m_wheels[i].home_angle / 180.;
 		}
-
+		
 		m_pub_joint_state = this->create_publisher<sensor_msgs::msg::JointState>("/drives/joint_states", 10);
 		m_pub_joint_state_raw = this->create_publisher<sensor_msgs::msg::JointState>("/drives/joint_states_raw", 10);
 
@@ -226,7 +226,7 @@ public:
 		motor_t steer;
 
 		int32_t home_dig_in = 0;				// digital input for homing switch
-		int32_t home_angle = 0;					// home steering angle in rad
+		double home_angle = 0.0;					// home steering angle in rad
 
 		double target_wheel_vel = 0;			// current wheel velocity target in rad/s
 		double target_steer_pos = 0;			// current steering target angle in rad
