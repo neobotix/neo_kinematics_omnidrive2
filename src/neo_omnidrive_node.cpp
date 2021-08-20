@@ -242,14 +242,10 @@ private:
 					// update wheel velocity
 					wheel.wheel_vel = -1 * joint_state->velocity[i] * m_wheel_radius;
 				}
-				if(joint_state->name[i] == wheel.steer_joint_name && i>0)
+				if(joint_state->name[i] == wheel.steer_joint_name)
 				{
 					// update wheel steering angle and wheel position (due to lever arm)
 					wheel.set_wheel_angle(joint_state->position[i] + M_PI);
-				}
-				if(joint_state->name[i] == wheel.steer_joint_name && i==0)
-				{
-					wheel.set_wheel_angle(joint_state->position[i] +  M_PI );
 				}
 			}
 		}
@@ -265,7 +261,7 @@ private:
 		// integrate odometry (using second order midpoint method)
 		if(m_curr_odom_time.sec != 0.000)
 		{
-			const double dt = (joint_state->header.stamp.sec - m_curr_odom_time.sec);
+			const double dt = (joint_state->header.stamp.nanosec - m_curr_odom_time.nanosec)*(1.0/1000000000.0);
 
 			// check for valid delta time
 			if(dt > 0 && dt < 1)
