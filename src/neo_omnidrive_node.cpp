@@ -263,7 +263,7 @@ private:
 		odometry.child_frame_id = "base_link";
 
 		// integrate odometry (using second order midpoint method)
-		if(m_curr_odom_time.sec == 0.000)
+		if(m_curr_odom_time.sec != 0.000)
 		{
 			const double dt = (joint_state->header.stamp.sec - m_curr_odom_time.sec);
 
