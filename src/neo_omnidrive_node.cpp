@@ -287,7 +287,7 @@ private:
 			}
 			else
 			{
-				RCLCPP_WARN_STREAM(this->get_logger(), "invalid joint state delta time: " << dt << " sec");
+				RCLCPP_WARN_ONCE(this->get_logger(), "invalid joint state delta time");
 			}
 		}
 		m_curr_odom_time = joint_state->header.stamp;
