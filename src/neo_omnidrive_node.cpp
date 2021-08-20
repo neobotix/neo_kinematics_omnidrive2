@@ -324,7 +324,7 @@ private:
 			geometry_msgs::msg::TransformStamped odom_tf;
 			geometry_msgs::msg::Quaternion quat_msg;
 			// compose header
-			odom_tf.header.stamp.sec = joint_state->header.stamp.sec;
+			odom_tf.header.stamp = joint_state->header.stamp;
 			odom_tf.header.frame_id = "odom";
 			odom_tf.child_frame_id = "base_link";
 			// compose data container
