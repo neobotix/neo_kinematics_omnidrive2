@@ -261,7 +261,9 @@ private:
 		// integrate odometry (using second order midpoint method)
 		if(m_curr_odom_time.sec != 0.000)
 		{
-			const double dt = (joint_state->header.stamp.nanosec - m_curr_odom_time.nanosec)*(1.0/1000000000.0);
+			// Convert nanoseconds to seconds add them with the seconds
+			const double dt = (joint_state->header.stamp.sec + (joint_state->header.stamp.nanosec)*(1.0/1000000000.0))
+							 - (m_curr_odom_time.sec + (m_curr_odom_time.nanosec)*(1.0/1000000000.0) );
 
 			// check for valid delta time
 			if(dt > 0 && dt < 1)
@@ -283,7 +285,7 @@ private:
 			}
 			else
 			{
-				RCLCPP_WARN_ONCE(this->get_logger(), "invalid joint state delta time");
+				RCLCPP_WARN(this->get_logger(), "invalid joint state delta time");
 			}
 		}
 		m_curr_odom_time = joint_state->header.stamp;
