@@ -1188,7 +1188,7 @@ private:
 		if(num_motor_updates >= m_wheels.size() * 2 && m_last_update_time < m_last_sync_time)
 		{
 			const rclcpp::Time now = rclcpp::Clock().now();
-			const rclcpp::Time timestamp = m_last_sync_time + rclcpp::Duration(m_motor_delay);
+			const rclcpp::Time timestamp = m_last_sync_time + rclcpp::Duration((int32_t)m_motor_delay, 0);
 			publish_joint_states(timestamp);
 			publish_joint_states_raw(timestamp);
 			m_last_update_time = now;
