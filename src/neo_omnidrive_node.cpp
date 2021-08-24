@@ -256,6 +256,7 @@ private:
 		nav_msgs::msg::Odometry odometry;
 		odometry.header.frame_id = "odom";
 		odometry.header.stamp.sec = joint_state->header.stamp.sec;
+		odometry.header.stamp.nanosec = joint_state->header.stamp.nanosec;
 		odometry.child_frame_id = "base_link";
 
 		// integrate odometry (using second order midpoint method)
@@ -313,8 +314,8 @@ private:
 		odometry.twist.twist = m_curr_odom_twist;
 
 		// assign bogus covariance values
-		// odometry->pose.covariance.fill(0.1);
-		// odometry->twist.covariance.fill(0.1);
+		odometry.pose.covariance.fill(0.1);
+		odometry.twist.covariance.fill(0.1);
 
 		// publish odometry
 		m_pub_odometry->publish(odometry);
@@ -333,13 +334,10 @@ private:
 			odom_tf.transform.translation.x = m_curr_odom_x;
 			odom_tf.transform.translation.y = m_curr_odom_y;
 			odom_tf.transform.translation.z = 0;
-			tf2::Quaternion q1;
-			q1.setRPY(0, 0, m_curr_odom_yaw);
-			quat_msg = tf2::toMsg(q1);
-			odom_tf.transform.rotation.x = quat_msg.x;
-			odom_tf.transform.rotation.y = quat_msg.y;
-			odom_tf.transform.rotation.z = quat_msg.z;
-			odom_tf.transform.rotation.w = quat_msg.w;
+			odom_tf.transform.rotation.x = quat_msg1.x;
+			odom_tf.transform.rotation.y = quat_msg1.y;
+			odom_tf.transform.rotation.z = quat_msg1.z;
+			odom_tf.transform.rotation.w = quat_msg1.w;
 			// publish the transform
 
 			m_tf_odom_broadcaster->sendTransform(odom_tf);
