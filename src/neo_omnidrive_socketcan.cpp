@@ -338,9 +338,9 @@ public:
 		if(is_all_homed && all_motors_operational())
 		{
 			// check for input timeout
-			if((now - m_last_trajectory_time).seconds() > m_trajectory_timeout)
+			if(((now - m_last_trajectory_time).nanoseconds()*1.0/1000000000.0) > m_trajectory_timeout)
 			{
-				if(!is_trajectory_timeout && !(m_last_trajectory_time.seconds() == 0.0)) {
+				if(!is_trajectory_timeout && !((m_last_trajectory_time.nanoseconds()*1.0/1000000000.0) == 0.0)) {
 					RCLCPP_WARN_STREAM(this->get_logger(),"joint_trajectory input timeout! Stopping now.");
 				}
 				is_trajectory_timeout = true;
@@ -643,7 +643,7 @@ private:
 	void check_motor_timeout(motor_t& motor, rclcpp::Time now)
 	{
 		if(motor.status_recv_time < motor.request_send_time
-			&& (now - motor.request_send_time).seconds() > m_motor_timeout)
+			&& ((now - motor.request_send_time).nanoseconds()*1.0/1000000000.0) > m_motor_timeout)
 		{
 			if(motor.state != ST_MOTOR_FAILURE) {
 				RCLCPP_ERROR_STREAM(this->get_logger(), motor.joint_name << ": motor status timeout!");
@@ -1193,6 +1193,10 @@ private:
 			publish_joint_states_raw(timestamp);
 			m_last_update_time = now;
 		}
+		else
+		{
+			RCLCPP_DEBUG_STREAM(this->get_logger(), "Sync update timeout!");
+		}
 	}
 
 	void publish_joint_states(rclcpp::Time timestamp)
@@ -1293,7 +1297,7 @@ private:
 			{
 				if(motor.homing_state == 0)
 				{
-					if((rclcpp::Clock().now() - motor.homing_start_time).seconds() > 0.5)
+					if(((rclcpp::Clock().now() - motor.homing_start_time).nanoseconds()*1.0/1000000000.0) > 0.5)
 					{
 						motor.homing_state = 1;		// only go to finish after active for some time
 					}
