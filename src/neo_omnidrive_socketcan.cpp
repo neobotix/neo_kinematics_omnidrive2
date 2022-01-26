@@ -173,12 +173,12 @@ public:
 			m_wheels[i].home_angle = M_PI * m_wheels[i].home_angle / 180.;
 		}
 		
-		m_pub_joint_state = this->create_publisher<sensor_msgs::msg::JointState>("/joint_states", 10);
-		m_pub_joint_state_raw = this->create_publisher<sensor_msgs::msg::JointState>("/joint_states_raw", 10);
+		m_pub_joint_state = this->create_publisher<sensor_msgs::msg::JointState>("joint_states", 10);
+		m_pub_joint_state_raw = this->create_publisher<sensor_msgs::msg::JointState>("joint_states_raw", 10);
 
-		m_sub_joint_trajectory = this->create_subscription<trajectory_msgs::msg::JointTrajectory>("/drives/joint_trajectory", 1, std::bind(&NeoSocketCanNode::joint_trajectory_callback, this, _1));
+		m_sub_joint_trajectory = this->create_subscription<trajectory_msgs::msg::JointTrajectory>("drives/joint_trajectory", 1, std::bind(&NeoSocketCanNode::joint_trajectory_callback, this, _1));
 		m_sub_emergency_stop = this->create_subscription<neo_msgs2::msg::EmergencyStopState>("emergency_stop_state", 1, std::bind(&NeoSocketCanNode::emergency_stop_callback, this, _1));
-		m_sub_joy = this->create_subscription<sensor_msgs::msg::Joy>("/joy", 1, std::bind(&NeoSocketCanNode::joy_callback, this, _1));
+		m_sub_joy = this->create_subscription<sensor_msgs::msg::Joy>("joy", 1, std::bind(&NeoSocketCanNode::joy_callback, this, _1));
 
 		m_can_thread = std::thread(&NeoSocketCanNode::receive_loop, this);
 	}

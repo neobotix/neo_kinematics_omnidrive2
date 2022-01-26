@@ -124,15 +124,15 @@ public:
 			m_wheels[i].set_wheel_angle(0);
 		}
 
-		m_pub_odometry = this->create_publisher<nav_msgs::msg::Odometry>("/odom", 1);
-		m_pub_joint_trajectory = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/drives/joint_trajectory", 1);
+		m_pub_odometry = this->create_publisher<nav_msgs::msg::Odometry>("odom", 1);
+		m_pub_joint_trajectory = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("drives/joint_trajectory", 1);
       	m_tf_odom_broadcaster = std::make_shared<tf2_ros::TransformBroadcaster>(this);
 		
 
-		m_sub_cmd_vel = this->create_subscription<geometry_msgs::msg::Twist>("/cmd_vel", 1, std::bind(&NeoOmniDriveNode::cmd_vel_callback, this, _1));
-		m_sub_joint_state = this->create_subscription<sensor_msgs::msg::JointState>("/joint_states", 1, std::bind(&NeoOmniDriveNode::joint_state_callback, this, _1));
+		m_sub_cmd_vel = this->create_subscription<geometry_msgs::msg::Twist>("cmd_vel", 1, std::bind(&NeoOmniDriveNode::cmd_vel_callback, this, _1));
+		m_sub_joint_state = this->create_subscription<sensor_msgs::msg::JointState>("joint_states", 1, std::bind(&NeoOmniDriveNode::joint_state_callback, this, _1));
 
-		m_sub_joy = this->create_subscription<sensor_msgs::msg::Joy>("/joy", 1, std::bind(&NeoOmniDriveNode::joy_callback, this, _1));
+		m_sub_joy = this->create_subscription<sensor_msgs::msg::Joy>("joy", 1, std::bind(&NeoOmniDriveNode::joy_callback, this, _1));
 
 		this->m_srv_lock_platform = this->create_service<neo_srvs2::srv::LockPlatform>("lock_platform", std::bind(&NeoOmniDriveNode::lock_platform, this, _1, _2));
 		this->m_srv_unlock_platform = this->create_service<neo_srvs2::srv::UnlockPlatform>("unlock_platform", std::bind(&NeoOmniDriveNode::unlock_platform, this, _1, _2));
