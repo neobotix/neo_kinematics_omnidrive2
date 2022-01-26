@@ -328,8 +328,8 @@ private:
 			geometry_msgs::msg::Quaternion quat_msg;
 			// compose header
 			odom_tf.header.stamp = joint_state->header.stamp;
-			odom_tf.header.frame_id = "odom";
-			odom_tf.child_frame_id = "base_link";
+			odom_tf.header.frame_id = this->get_namespace() + "/odom";
+			odom_tf.child_frame_id = this->get_namespace() + "/base_link";
 			// compose data container
 			odom_tf.transform.translation.x = m_curr_odom_x;
 			odom_tf.transform.translation.y = m_curr_odom_y;
