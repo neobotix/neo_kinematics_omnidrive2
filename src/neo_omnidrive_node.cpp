@@ -45,7 +45,7 @@
 #include <sensor_msgs/msg/joy.hpp>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2/LinearMath/Quaternion.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 #include "tf2_ros/buffer.h"
 #include <boost/array.hpp>
 #include <neo_srvs2/srv/lock_platform.hpp>
