@@ -25,19 +25,19 @@ find_package(tf2_ros REQUIRED)
 find_package(angles REQUIRED)
 
 add_executable(neo_omnidrive_node src/neo_omnidrive_node.cpp)
-add_executable(neo_omnidrive_simulation_node src/neo_omnidrive_simulation_node.cpp)
+# add_executable(neo_omnidrive_simulation_node src/neo_omnidrive_simulation_node.cpp)
 add_executable(neo_omnidrive_socketcan_node src/neo_omnidrive_socketcan.cpp)
 
-ament_target_dependencies(neo_omnidrive_simulation_node
-  rclcpp
-  tf2_ros
-  sensor_msgs
-  geometry_msgs
-  std_msgs
-  nav_msgs
-  trajectory_msgs
-  neo_common2
-  angles)
+# ament_target_dependencies(neo_omnidrive_simulation_node
+#   rclcpp
+#   tf2_ros
+#   sensor_msgs
+#   geometry_msgs
+#   std_msgs
+#   nav_msgs
+#   trajectory_msgs
+#   neo_common2
+#   angles)
 
 ament_target_dependencies(neo_omnidrive_node
   rclcpp
@@ -70,7 +70,10 @@ install(DIRECTORY include/
    DESTINATION include/
 )
 
-install(TARGETS neo_omnidrive_simulation_node neo_omnidrive_socketcan_node neo_omnidrive_node
+install(TARGETS 
+#neo_omnidrive_simulation_node 
+neo_omnidrive_socketcan_node 
+neo_omnidrive_node
 DESTINATION lib/${PROJECT_NAME}
 	)
 
