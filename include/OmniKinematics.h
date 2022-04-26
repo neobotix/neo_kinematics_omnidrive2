@@ -32,16 +32,16 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#ifndef INCLUDE_OMNI_KINEMATICS_H_
-#define INCLUDE_OMNI_KINEMATICS_H_
+#ifndef OMNIKINEMATICS_H_
+#define OMNIKINEMATICS_H_
+
+#include <math.h>
+#include <vector>
+#include <stdexcept>
 
 #include "OmniWheel.h"
 
-#include <angles/angles.h>
-
-#include <vector>
-#include <stdexcept>
-#include <math.h>
+#include "angles/angles.h"
 
 
 /*
@@ -169,4 +169,4 @@ private:
 };
 
 
-#endif // INCLUDE_OMNI_KINEMATICS_H_
+#endif // OMNIKINEMATICS_H_
