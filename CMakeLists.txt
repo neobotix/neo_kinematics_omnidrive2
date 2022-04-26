@@ -22,6 +22,7 @@ find_package(neo_srvs2 REQUIRED)
 find_package(neo_msgs2 REQUIRED)
 find_package(neo_common2 REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(angles REQUIRED)
 
 add_executable(neo_omnidrive_node src/neo_omnidrive_node.cpp)
 add_executable(neo_omnidrive_simulation_node src/neo_omnidrive_simulation_node.cpp)
@@ -35,7 +36,8 @@ ament_target_dependencies(neo_omnidrive_simulation_node
   std_msgs
   nav_msgs
   trajectory_msgs
-  neo_common2)
+  neo_common2
+  angles)
 
 ament_target_dependencies(neo_omnidrive_node
   rclcpp
@@ -47,7 +49,8 @@ ament_target_dependencies(neo_omnidrive_node
   neo_srvs2
   nav_msgs
   trajectory_msgs
-  neo_common2)
+  neo_common2
+  angles)
 
 ament_target_dependencies(neo_omnidrive_socketcan_node
   rclcpp
@@ -58,7 +61,8 @@ ament_target_dependencies(neo_omnidrive_socketcan_node
   std_msgs
   nav_msgs
   trajectory_msgs
-  neo_common2)
+  neo_common2
+  angles)
 
 ament_export_include_directories(include)
 

@@ -32,9 +32,7 @@
     <exec_depend>neo_srvs2</exec_depend>
     <exec_depend>neo_msgs2</exec_depend>
     <exec_depend>neo_common2</exec_depend>
-
-
-
+    <exec_depend>angles</exec_depend>
 
     <export>
      <build_type>ament_cmake</build_type>
