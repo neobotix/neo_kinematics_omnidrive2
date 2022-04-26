@@ -44,60 +44,62 @@
  */
 class OmniWheel {
 public:
-	double center_pos_x = 0;			// steering axis location relative to base_link [m]
-	double center_pos_y = 0;			// steering axis location relative to base_link [m]
-	double lever_arm = 0;				// distance between steering axis and wheel center [m]
-	double home_angle = 0;				// wheel angle after homing [rad]
+  double center_pos_x = 0;      // steering axis location relative to base_link [m]
+  double center_pos_y = 0;      // steering axis location relative to base_link [m]
+  double lever_arm = 0;       // distance between steering axis and wheel center [m]
+  double home_angle = 0;        // wheel angle after homing [rad]
 
-	double wheel_pos_x = 0;				// wheel position relative to base_link [m]
-	double wheel_pos_y = 0;				// wheel position relative to base_link [m]
+  double wheel_pos_x = 0;       // wheel position relative to base_link [m]
+  double wheel_pos_y = 0;       // wheel position relative to base_link [m]
 
-	double wheel_angle = 0;				// current wheel angle relative to base_link [rad]
-	double wheel_vel = 0;				// current wheel velocity between ground and wheel_link [m/s]
+  double wheel_angle = 0;       // current wheel angle relative to base_link [rad]
+  double wheel_vel = 0;       // current wheel velocity between ground and wheel_link [m/s]
 
-	std::string drive_joint_name;
-	std::string steer_joint_name;
+  std::string drive_joint_name;
+  std::string steer_joint_name;
 
-	OmniWheel()
-	{
-	}
+  OmniWheel()
+  {
+  }
 
-	OmniWheel(	double center_pos_x_, double center_pos_y_, double lever_arm_, double home_angle_,
-				double wheel_angle_ = 0, double wheel_vel_ = 0)
-		:	center_pos_x(center_pos_x_),
-			center_pos_y(center_pos_y_),
-			lever_arm(lever_arm_),
-			home_angle(home_angle_)
-	{
-		set_wheel_angle(wheel_angle_);
-		wheel_vel = wheel_vel_;
-	}
+  OmniWheel(
+    double center_pos_x_, double center_pos_y_, double lever_arm_, double home_angle_,
+    double wheel_angle_ = 0, double wheel_vel_ = 0)
+    : center_pos_x(center_pos_x_),
+    center_pos_y(center_pos_y_),
+    lever_arm(lever_arm_),
+    home_angle(home_angle_)
+  {
+    set_wheel_angle(wheel_angle_);
+    wheel_vel = wheel_vel_;
+  }
 
-	/*
-	 * Computes new wheel position + sets new angle.
-	 */
-	void set_wheel_angle(double wheel_angle_)
-	{
-		wheel_angle = wheel_angle_;
-		wheel_pos_x = center_pos_x + lever_arm * -sin(wheel_angle_);
-		wheel_pos_y = center_pos_y + lever_arm * cos(wheel_angle_);
-	}
+  /*
+   * Computes new wheel position + sets new angle.
+   */
+  void set_wheel_angle(double wheel_angle_)
+  {
+    wheel_angle = wheel_angle_;
+    wheel_pos_x = center_pos_x + lever_arm * -sin(wheel_angle_);
+    wheel_pos_y = center_pos_y + lever_arm * cos(wheel_angle_);
+  }
 
-	/*
-	 * Returns wheel radius from center. (polar coords)
-	 */
-	double get_wheel_pos_radius() const {
-		return ::hypot(wheel_pos_x, wheel_pos_y);
-	}
+  /*
+   * Returns wheel radius from center. (polar coords)
+   */
+  double get_wheel_pos_radius() const
+  {
+    return ::hypot(wheel_pos_x, wheel_pos_y);
+  }
 
-	/*
-	 * Returns wheel position angle relative to X axis. (polar coords)
-	 */
-	double get_wheel_pos_angle() const {
-		return ::atan2(wheel_pos_y, wheel_pos_x);
-	}
-
+  /*
+   * Returns wheel position angle relative to X axis. (polar coords)
+   */
+  double get_wheel_pos_angle() const
+  {
+    return ::atan2(wheel_pos_y, wheel_pos_x);
+  }
 };
 
 
-#endif // OMNIWHEEL_H_
+#endif  // OMNIWHEEL_H_
