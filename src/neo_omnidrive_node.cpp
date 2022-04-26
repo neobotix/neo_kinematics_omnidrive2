@@ -206,6 +206,14 @@ public:
     } else {
       is_cmd_timeout = false;
     }
+
+    // check if platform is locked
+    if (is_locked) {
+      m_last_cmd_vel.linear.x = 0;  // use zero cmd_vel
+      m_last_cmd_vel.linear.y = 0;
+      m_last_cmd_vel.angular.z = 0;
+    }
+
     // compute new wheel angles and velocities
     auto cmd_wheels = m_kinematics->compute(
       m_wheels, m_last_cmd_vel.linear.x,
