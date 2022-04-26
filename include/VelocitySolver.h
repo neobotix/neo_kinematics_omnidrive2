@@ -32,8 +32,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#ifndef INCLUDE_VELOCITY_SOLVER_H_
-#define INCLUDE_VELOCITY_SOLVER_H_
+#ifndef VELOCITYSOLVER_H_
+#define VELOCITYSOLVER_H_
 
 #include "OmniWheel.h"
 
@@ -112,4 +112,4 @@ private:
 };
 
 
-#endif // INCLUDE_VELOCITY_SOLVER_H_
+#endif // VELOCITYSOLVER_H_

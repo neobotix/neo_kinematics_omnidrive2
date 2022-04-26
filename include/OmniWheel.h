@@ -32,8 +32,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#ifndef INCLUDE_OMNI_WHEEL_H_
-#define INCLUDE_OMNI_WHEEL_H_
+#ifndef OMNIWHEEL_H_
+#define OMNIWHEEL_H_
 
 #include <math.h>
 #include <string>
@@ -100,4 +100,4 @@ public:
 };
 
 
-#endif // INCLUDE_OMNI_WHEEL_H_
+#endif // OMNIWHEEL_H_
