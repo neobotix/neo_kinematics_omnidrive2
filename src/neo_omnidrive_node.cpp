@@ -76,6 +76,7 @@ public:
     this->declare_parameter<double>("small_vel_threshold", 0.0);
     this->declare_parameter<double>("steer_hysteresis", 0.0);
     this->declare_parameter<double>("steer_hysteresis_dynamic", 0.0);
+    this->declare_parameter<bool>("reset_odom", false);
 
     if (!this->get_parameter("num_wheels", m_num_wheels)) {
       throw std::logic_error("missing num_wheels param");
@@ -181,6 +182,8 @@ public:
     this->get_parameter_or("small_vel_threshold", m_kinematics->small_vel_threshold, 0.03);
     this->get_parameter_or("steer_hysteresis", m_kinematics->steer_hysteresis, 30.0);
     this->get_parameter_or("steer_hysteresis_dynamic", m_kinematics->steer_hysteresis_dynamic, 5.0);
+    this->get_parameter("reset_odom", m_reset_odom);
+
     m_kinematics->steer_hysteresis = M_PI * m_kinematics->steer_hysteresis / 180;
     m_kinematics->steer_hysteresis_dynamic = M_PI * m_kinematics->steer_hysteresis_dynamic / 180;
     m_kinematics->initialize(m_wheels);
@@ -436,6 +439,13 @@ private:
         m_kinematics->last_stop_angle[i] = request->steer_angles_rad[i];
         response->success = response->success && !m_kinematics->is_driving[i];
       }
+      if (m_reset_odom) {
+        m_curr_odom_x = 0.0;
+        m_curr_odom_y = 0.0;
+        m_curr_odom_yaw = 0.0;
+        nav_msgs::msg::Odometry reset_odom;
+        m_pub_odometry->publish(reset_odom);
+      }
       return true;
     }
     response->success = false;
@@ -476,6 +486,7 @@ private:
   geometry_msgs::msg::Twist m_last_cmd_vel;
   bool is_cmd_timeout = false;
   bool is_locked = false;
+  bool m_reset_odom = false;
 
   std_msgs::msg::Header::_stamp_type m_curr_odom_time;
   double m_curr_odom_x = 0;
