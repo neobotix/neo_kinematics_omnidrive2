@@ -212,9 +212,9 @@ public:
 
     // check if platform is locked
     if (is_locked) {
-      m_last_cmd_vel.linear.x = 0;  // use zero cmd_vel
-      m_last_cmd_vel.linear.y = 0;
-      m_last_cmd_vel.angular.z = 0;
+      m_last_cmd_vel.linear.x = std::numeric_limits<double>::min();  // use zero cmd_vel
+      m_last_cmd_vel.linear.y = std::numeric_limits<double>::min();
+      m_last_cmd_vel.angular.z = std::numeric_limits<double>::min();
     }
 
     // compute new wheel angles and velocities
@@ -396,9 +396,9 @@ private:
         ::usleep(500 * 1000);         // wait for homeing to start before sending new commands
         m_kinematics->initialize(m_wheels);   // reset stop position to home
         if (m_reset_odom) {
-          m_curr_odom_x = 0.0;
-          m_curr_odom_y = 0.0;
-          m_curr_odom_yaw = 0.0;
+          m_curr_odom_x = std::numeric_limits<double>::min();
+          m_curr_odom_y = std::numeric_limits<double>::min();
+          m_curr_odom_yaw = std::numeric_limits<double>::min();
         }
       }
     }
@@ -445,9 +445,9 @@ private:
         response->success = response->success && !m_kinematics->is_driving[i];
       }
       if (m_reset_odom) {
-        m_curr_odom_x = 0.0;
-        m_curr_odom_y = 0.0;
-        m_curr_odom_yaw = 0.0;
+        m_curr_odom_x = std::numeric_limits<double>::min();
+        m_curr_odom_y = std::numeric_limits<double>::min();
+        m_curr_odom_yaw = std::numeric_limits<double>::min();
       }
       return true;
     }
@@ -492,9 +492,9 @@ private:
   bool m_reset_odom = false;
 
   std_msgs::msg::Header::_stamp_type m_curr_odom_time;
-  double m_curr_odom_x = 0.0;
-  double m_curr_odom_y = 0.0;
-  double m_curr_odom_yaw = 0.0;
+  double m_curr_odom_x = std::numeric_limits<double>::min();
+  double m_curr_odom_y = std::numeric_limits<double>::min();
+  double m_curr_odom_yaw = std::numeric_limits<double>::min();
   geometry_msgs::msg::Twist m_curr_odom_twist;
 };
 
