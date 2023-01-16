@@ -73,6 +73,7 @@ public:
         this->declare_parameter<double>("small_vel_threshold", 0.0);
         this->declare_parameter<double>("steer_hysteresis", 0.0);
         this->declare_parameter<double>("steer_hysteresis_dynamic", 0.0);
+        this->declare_parameter<bool>("reset_odom", false);
 
   		if(!this->get_parameter("num_wheels", m_num_wheels)) {
 			throw std::logic_error("missing num_wheels param");
@@ -141,6 +142,7 @@ public:
 		m_kinematics = std::make_shared<OmniKinematics>(m_num_wheels);
 		m_velocity_solver = std::make_shared<VelocitySolver>(m_num_wheels);
 
+    this->get_parameter("reset_odom", m_reset_odom);
 		this->get_parameter_or("zero_vel_threshold", m_kinematics->zero_vel_threshold, 0.005);
 		this->get_parameter_or("small_vel_threshold", m_kinematics->small_vel_threshold, 0.03);
 		this->get_parameter_or("steer_hysteresis", m_kinematics->steer_hysteresis, 30.0);
@@ -360,6 +362,11 @@ private:
 			{
 				::usleep(500 * 1000);					// wait for homeing to start before sending new commands
 				m_kinematics->initialize(m_wheels);		// reset stop position to home
+        if (m_reset_odom) {
+          m_curr_odom_x = std::numeric_limits<double>::min();
+          m_curr_odom_y = std::numeric_limits<double>::min();
+          m_curr_odom_yaw = std::numeric_limits<double>::min();
+        }
 			}
 		}
 		if(m_steer_reset_button >= 0 && int(joy->buttons.size()) > m_steer_reset_button)
@@ -392,20 +399,27 @@ private:
 		return true;
 	}
 
-	bool reset_omni_wheels(std::shared_ptr<neo_srvs2::srv::ResetOmniWheels::Request> request, std::shared_ptr<neo_srvs2::srv::ResetOmniWheels::Response> response)
-	{
-		if(m_num_wheels >= (int)request->steer_angles_rad.size()) {
-			response->success = true;
-			for(size_t i = 0; i < request->steer_angles_rad.size(); ++i)
-			{
-				m_kinematics->last_stop_angle[i] = request->steer_angles_rad[i];
-				response->success = response->success && !m_kinematics->is_driving[i];
-			}
-			return true;
-		}
-		response->success = false;
-		return false;
-	}
+  bool reset_omni_wheels(
+    std::shared_ptr<neo_srvs2::srv::ResetOmniWheels::Request> request,
+    std::shared_ptr<neo_srvs2::srv::ResetOmniWheels::Response> response)
+  {
+    if (m_num_wheels >= static_cast<int>(request->steer_angles_rad.size())) {
+      response->success = true;
+      for (size_t i = 0; i < request->steer_angles_rad.size(); ++i) {
+        m_kinematics->last_stop_angle[i] = request->steer_angles_rad[i];
+        response->success = response->success && !m_kinematics->is_driving[i];
+      }
+      if (m_reset_odom) {
+        m_curr_odom_x = std::numeric_limits<double>::min();
+        m_curr_odom_y = std::numeric_limits<double>::min();
+        m_curr_odom_yaw = std::numeric_limits<double>::min();
+      }
+      return true;
+    }
+    response->success = false;
+    return false;
+  }
+
 
 private:
 	std::mutex m_node_mutex;
@@ -441,6 +455,7 @@ private:
 	geometry_msgs::msg::Twist m_last_cmd_vel;
 	bool is_cmd_timeout = false;
 	bool is_locked = false;
+  bool m_reset_odom = false;
 
 	std_msgs::msg::Header::_stamp_type m_curr_odom_time;
 	double m_curr_odom_x = 0;
