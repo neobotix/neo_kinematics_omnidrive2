@@ -395,6 +395,11 @@ private:
       if (joy->buttons[m_homeing_button]) {
         ::usleep(500 * 1000);         // wait for homeing to start before sending new commands
         m_kinematics->initialize(m_wheels);   // reset stop position to home
+        if (m_reset_odom) {
+          m_curr_odom_x = 0.0;
+          m_curr_odom_y = 0.0;
+          m_curr_odom_yaw = 0.0;
+        }
       }
     }
     if (m_steer_reset_button >= 0 && static_cast<int>(joy->buttons.size()) > m_steer_reset_button) {
@@ -443,8 +448,6 @@ private:
         m_curr_odom_x = 0.0;
         m_curr_odom_y = 0.0;
         m_curr_odom_yaw = 0.0;
-        nav_msgs::msg::Odometry reset_odom;
-        m_pub_odometry->publish(reset_odom);
       }
       return true;
     }
@@ -489,9 +492,9 @@ private:
   bool m_reset_odom = false;
 
   std_msgs::msg::Header::_stamp_type m_curr_odom_time;
-  double m_curr_odom_x = 0;
-  double m_curr_odom_y = 0;
-  double m_curr_odom_yaw = 0;
+  double m_curr_odom_x = 0.0;
+  double m_curr_odom_y = 0.0;
+  double m_curr_odom_yaw = 0.0;
   geometry_msgs::msg::Twist m_curr_odom_twist;
 };
 
