@@ -367,6 +367,10 @@ private:
       std::string robot_namespace(this->get_namespace());
       odom_tf.header.stamp = joint_state->header.stamp;
       if (robot_namespace != "/") {
+        robot_namespace.erase(
+          std::remove(robot_namespace.begin(),
+          robot_namespace.end(),
+          '/'), robot_namespace.end());
         odom_tf.header.frame_id = robot_namespace + "odom";
         odom_tf.child_frame_id = robot_namespace + "base_link";
       } else {
