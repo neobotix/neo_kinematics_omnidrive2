@@ -76,6 +76,7 @@ public:
     this->declare_parameter<double>("small_vel_threshold", 0.0);
     this->declare_parameter<double>("steer_hysteresis", 0.0);
     this->declare_parameter<double>("steer_hysteresis_dynamic", 0.0);
+    this->declare_parameter<bool>("reset_odom", false);
 
     if (!this->get_parameter("num_wheels", m_num_wheels)) {
       throw std::logic_error("missing num_wheels param");
@@ -181,6 +182,8 @@ public:
     this->get_parameter_or("small_vel_threshold", m_kinematics->small_vel_threshold, 0.03);
     this->get_parameter_or("steer_hysteresis", m_kinematics->steer_hysteresis, 30.0);
     this->get_parameter_or("steer_hysteresis_dynamic", m_kinematics->steer_hysteresis_dynamic, 5.0);
+    this->get_parameter("reset_odom", m_reset_odom);
+
     m_kinematics->steer_hysteresis = M_PI * m_kinematics->steer_hysteresis / 180;
     m_kinematics->steer_hysteresis_dynamic = M_PI * m_kinematics->steer_hysteresis_dynamic / 180;
     m_kinematics->initialize(m_wheels);
@@ -209,9 +212,9 @@ public:
 
     // check if platform is locked
     if (is_locked) {
-      m_last_cmd_vel.linear.x = 0;  // use zero cmd_vel
-      m_last_cmd_vel.linear.y = 0;
-      m_last_cmd_vel.angular.z = 0;
+      m_last_cmd_vel.linear.x = std::numeric_limits<double>::min();  // use zero cmd_vel
+      m_last_cmd_vel.linear.y = std::numeric_limits<double>::min();
+      m_last_cmd_vel.angular.z = std::numeric_limits<double>::min();
     }
 
     // compute new wheel angles and velocities
@@ -364,6 +367,10 @@ private:
       std::string robot_namespace(this->get_namespace());
       odom_tf.header.stamp = joint_state->header.stamp;
       if (robot_namespace != "/") {
+        robot_namespace.erase(
+          std::remove(robot_namespace.begin(),
+          robot_namespace.end(),
+          '/'), robot_namespace.end());
         odom_tf.header.frame_id = robot_namespace + "odom";
         odom_tf.child_frame_id = robot_namespace + "base_link";
       } else {
@@ -392,6 +399,11 @@ private:
       if (joy->buttons[m_homeing_button]) {
         ::usleep(500 * 1000);         // wait for homeing to start before sending new commands
         m_kinematics->initialize(m_wheels);   // reset stop position to home
+        if (m_reset_odom) {
+          m_curr_odom_x = std::numeric_limits<double>::min();
+          m_curr_odom_y = std::numeric_limits<double>::min();
+          m_curr_odom_yaw = std::numeric_limits<double>::min();
+        }
       }
     }
     if (m_steer_reset_button >= 0 && static_cast<int>(joy->buttons.size()) > m_steer_reset_button) {
@@ -436,6 +448,11 @@ private:
         m_kinematics->last_stop_angle[i] = request->steer_angles_rad[i];
         response->success = response->success && !m_kinematics->is_driving[i];
       }
+      if (m_reset_odom) {
+        m_curr_odom_x = std::numeric_limits<double>::min();
+        m_curr_odom_y = std::numeric_limits<double>::min();
+        m_curr_odom_yaw = std::numeric_limits<double>::min();
+      }
       return true;
     }
     response->success = false;
@@ -476,11 +493,12 @@ private:
   geometry_msgs::msg::Twist m_last_cmd_vel;
   bool is_cmd_timeout = false;
   bool is_locked = false;
+  bool m_reset_odom = false;
 
   std_msgs::msg::Header::_stamp_type m_curr_odom_time;
-  double m_curr_odom_x = 0;
-  double m_curr_odom_y = 0;
-  double m_curr_odom_yaw = 0;
+  double m_curr_odom_x = std::numeric_limits<double>::min();
+  double m_curr_odom_y = std::numeric_limits<double>::min();
+  double m_curr_odom_yaw = std::numeric_limits<double>::min();
   geometry_msgs::msg::Twist m_curr_odom_twist;
 };
 
