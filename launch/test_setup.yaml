@@ -18,6 +18,8 @@ neo_omnidrive_node:
     cmd_timeout: 0.2
     trajectory_timeout: 0.1
     home_vel: -1.0
+    odom_frame: "odom"
+    base_frame: "base_link"
 
     drive0:
       can_id: 2

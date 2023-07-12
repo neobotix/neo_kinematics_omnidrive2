@@ -77,6 +77,8 @@ public:
     this->declare_parameter<double>("steer_hysteresis", 0.0);
     this->declare_parameter<double>("steer_hysteresis_dynamic", 0.0);
     this->declare_parameter<bool>("reset_odom", false);
+    this->declare_parameter<std::string>("odom_frame", "odom");
+    this->declare_parameter<std::string>("base_frame", "base_link");
 
     if (!this->get_parameter("num_wheels", m_num_wheels)) {
       throw std::logic_error("missing num_wheels param");
@@ -94,6 +96,9 @@ public:
     this->get_parameter_or("homeing_button", m_homeing_button, 0);
     this->get_parameter_or("steer_reset_button", m_steer_reset_button, 1);
     this->get_parameter_or("control_rate", m_control_rate, 50.0);
+
+    this->get_parameter("odom_frame", m_odom_frame);
+    this->get_parameter("base_frame", m_base_frame);
 
     if (m_num_wheels < 1) {
       throw std::logic_error("invalid num_wheels param");
@@ -291,10 +296,10 @@ private:
     m_velocity_solver->solve(m_wheels);
 
     nav_msgs::msg::Odometry odometry;
-    odometry.header.frame_id = "odom";
+    odometry.header.frame_id = m_odom_frame;
     odometry.header.stamp.sec = joint_state->header.stamp.sec;
     odometry.header.stamp.nanosec = joint_state->header.stamp.nanosec;
-    odometry.child_frame_id = "base_link";
+    odometry.child_frame_id = m_base_frame;
 
     // integrate odometry (using second order midpoint method)
     if (m_curr_odom_time.sec != 0.000) {
@@ -371,11 +376,11 @@ private:
           std::remove(robot_namespace.begin(),
           robot_namespace.end(),
           '/'), robot_namespace.end());
-        odom_tf.header.frame_id = robot_namespace + "odom";
-        odom_tf.child_frame_id = robot_namespace + "base_link";
+        odom_tf.header.frame_id = robot_namespace + m_odom_frame;
+        odom_tf.child_frame_id = robot_namespace + m_base_frame;
       } else {
-        odom_tf.header.frame_id = "odom";
-        odom_tf.child_frame_id = "base_link";
+        odom_f.header.frame_id = m_odom_frame;
+        odom_tf.child_frame_id = m_base_frame;
       }
       // compose data container
       odom_tf.transform.translation.x = m_curr_odom_x;
@@ -500,6 +505,9 @@ private:
   double m_curr_odom_y = std::numeric_limits<double>::min();
   double m_curr_odom_yaw = std::numeric_limits<double>::min();
   geometry_msgs::msg::Twist m_curr_odom_twist;
+
+  std::string m_odom_frame = "";
+  std::string m_base_frame = "";
 };
 
 int main(int argc, char ** argv)
