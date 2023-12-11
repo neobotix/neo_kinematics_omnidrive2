@@ -379,7 +379,7 @@ private:
         odom_tf.header.frame_id = robot_namespace + m_odom_frame;
         odom_tf.child_frame_id = robot_namespace + m_base_frame;
       } else {
-        odom_f.header.frame_id = m_odom_frame;
+        odom_tf.header.frame_id = m_odom_frame;
         odom_tf.child_frame_id = m_base_frame;
       }
       // compose data container
