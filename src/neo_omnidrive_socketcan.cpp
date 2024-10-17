@@ -718,11 +718,12 @@ private:
     disable_watchdog_all();
 
     for (auto & wheel : m_wheels) {
+      if (wheel.home_activate) {
+
       // disarm homing
       canopen_set_int(wheel.steer, 'H', 'M', 1, 0);
       can_sync();
 
-      if (wheel.home_activate) {
         // configure homing sequences
         // setting the value such that increment counter resets after the homing event occurs
         canopen_set_int(wheel.steer, 'H', 'M', 2, wheel.steer.enc_home_offset);
@@ -732,7 +733,6 @@ private:
          listen for change of homing event(high/low/falling/rising) **/
         canopen_set_int(wheel.steer, 'H', 'M', 3, wheel.home_dig_in);
         can_sync();
-      }
 
       // choose the action that the controller shall perform after the homing event occurred
       // HM[4] = 0 : after Event stop immediately
@@ -745,6 +745,7 @@ private:
       // HM[5] = 0 : absolute setting of position counter: PX = HM[2]
       canopen_set_int(wheel.steer, 'H', 'M', 5, 0);
       can_sync();
+      }
     }
 
     // start turning motors
@@ -758,7 +759,9 @@ private:
 
     // arm homing
     for (auto & wheel : m_wheels) {
-      arm_homing(wheel.steer);
+      if (wheel.home_activate) {
+        arm_homing(wheel.steer);
+      }
     }
     can_sync();
 
@@ -787,15 +790,19 @@ private:
 
       // check for restart
       if (wheel.steer.homing_state == -2) {
-        arm_homing(wheel.steer);
+        if (wheel.home_activate) {
+          arm_homing(wheel.steer);
+        }
       }
 
       // check for timeout
       if ((now - wheel.steer.homing_start_time).seconds() > 20) {
-        RCLCPP_WARN_STREAM(
-          this->get_logger(),
-          "Homeing timeout on motor " << wheel.steer.joint_name << ", restarting ...");
-        arm_homing(wheel.steer);
+        if (wheel.home_activate) {
+          RCLCPP_WARN_STREAM(
+            this->get_logger(),
+            "Homeing timeout on motor " << wheel.steer.joint_name << ", restarting ...");
+          arm_homing(wheel.steer);
+        }
       }
     }
 
