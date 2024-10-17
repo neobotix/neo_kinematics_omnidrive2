@@ -127,6 +127,7 @@ public:
       this->declare_parameter<double>("steer" + std::to_string(i) + ".home_angle", i * 10);
       this->declare_parameter<int32_t>("steer" + std::to_string(i) + ".home_dig_in", i * 10);
       this->declare_parameter<int32_t>("steer" + std::to_string(i) + ".enc_home_offset", i * 10);
+      this->declare_parameter<bool>("steer" + std::to_string(i) + ".home_activate", true);
 
       if (!this->get_parameter("drive" + std::to_string(i) + ".can_id", m_wheels[i].drive.can_id)) {
         throw std::logic_error("can_id param missing for drive motor" + std::to_string(i));
@@ -203,6 +204,13 @@ public:
           m_wheels[i].home_dig_in))
       {
         throw std::logic_error("home_dig_in param missing for steering motor" + std::to_string(i));
+      }
+      if (!this->get_parameter(
+          "steer" + std::to_string(i) +
+          ".home_activate",
+          m_wheels[i].home_activate))
+      {
+        throw std::logic_error("home_activate param missing for steering motor" + std::to_string(i));
       }
       if (!this->get_parameter(
           "steer" + std::to_string(i) +
@@ -297,6 +305,8 @@ public:
     double curr_wheel_vel = 0;        // current wheel velocity in rad/s
     double curr_steer_pos = 0;        // current steering angle in rad
     double curr_steer_vel = 0;        // current steering velocity in rad/s
+
+    bool home_activate = true;
   };
 
   struct can_msg_t
@@ -712,15 +722,17 @@ private:
       canopen_set_int(wheel.steer, 'H', 'M', 1, 0);
       can_sync();
 
-      // configure homing sequences
-      // setting the value such that increment counter resets after the homing event occurs
-      canopen_set_int(wheel.steer, 'H', 'M', 2, wheel.steer.enc_home_offset);
-      can_sync();
+      if (wheel.home_activate) {
+        // configure homing sequences
+        // setting the value such that increment counter resets after the homing event occurs
+        canopen_set_int(wheel.steer, 'H', 'M', 2, wheel.steer.enc_home_offset);
+        can_sync();
 
-      /** choosing channel/switch on which controller has to 
-       listen for change of homing event(high/low/falling/rising) **/
-      canopen_set_int(wheel.steer, 'H', 'M', 3, wheel.home_dig_in);
-      can_sync();
+        /** choosing channel/switch on which controller has to 
+         listen for change of homing event(high/low/falling/rising) **/
+        canopen_set_int(wheel.steer, 'H', 'M', 3, wheel.home_dig_in);
+        can_sync();
+      }
 
       // choose the action that the controller shall perform after the homing event occurred
       // HM[4] = 0 : after Event stop immediately
