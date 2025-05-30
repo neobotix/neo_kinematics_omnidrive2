@@ -222,9 +222,9 @@ public:
       m_wheels[i].home_angle = M_PI * m_wheels[i].home_angle / 180.;
     }
 
-    m_pub_joint_state = this->create_publisher<sensor_msgs::msg::JointState>("joint_states", 10);
+    m_pub_joint_state = this->create_publisher<sensor_msgs::msg::JointState>("drives/joint_states", 10);
     m_pub_joint_state_raw = this->create_publisher<sensor_msgs::msg::JointState>(
-      "joint_states_raw",
+      "drives/joint_states_raw",
       10);
 
     m_sub_joint_trajectory = this->create_subscription<trajectory_msgs::msg::JointTrajectory>(
