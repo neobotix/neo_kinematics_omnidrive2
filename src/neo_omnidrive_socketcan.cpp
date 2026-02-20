@@ -77,6 +77,7 @@ public:
     this->declare_parameter<bool>("auto_home", false);
     this->declare_parameter<bool>("measure_torque", false);
     this->declare_parameter<int>("homeing_button", 0);
+    this->declare_parameter<int>("pc_node_id", 9);
 
     if (!this->get_parameter("control_rate", m_control_rate)) {
       throw std::logic_error("missing control_rate param");
@@ -102,6 +103,7 @@ public:
     this->get_parameter_or("auto_home", m_auto_home, true);
     this->get_parameter_or("measure_torque", m_measure_torque, false);
     this->get_parameter_or("homeing_button", m_homeing_button, 0);
+    this->get_parameter_or("pc_node_id", m_pc_node_id, 9);
 
     if (m_motor_group_id >= 0) {
       RCLCPP_INFO_STREAM(this->get_logger(), "Using motor group id: " << m_motor_group_id);
@@ -466,8 +468,9 @@ public:
     // check if we need to send a heartbeat
     if ((m_sync_counter + 2 * m_num_wheels) % m_heartbeat_divider == 0) {
       can_msg_t msg;        // send heartbeat message
-      msg.id = 0x700;
-      msg.length = 5;
+      msg.id = 0x700 + m_pc_node_id;
+      msg.length = 1;
+      msg.data[0] = 5;
       can_transmit(msg);
     }
   }
@@ -810,8 +813,9 @@ private:
     // before the next scheduled heartbeat in update()
     {
       can_msg_t msg;
-      msg.id = 0x700;
-      msg.length = 5;
+      msg.id = 0x700 + m_pc_node_id;
+      msg.length = 1;
+      msg.data[0] = 5;
       can_transmit(msg);
     }
 
@@ -858,7 +862,7 @@ private:
   {
     // configure to fail after missing 3 heartbeats
     const int heartbeat_time_ms = 4 * 1000 * m_heartbeat_divider / m_control_rate;
-    const int pc_node_id = 0x00;
+    const int pc_node_id = m_pc_node_id;
 
     // consumer (PC) heartbeat time
     canopen_SDO_download(motor, 0x1016, 1, (pc_node_id << 16) | heartbeat_time_ms);
@@ -1546,6 +1550,7 @@ private:
   bool m_auto_home = false;
   bool m_measure_torque = false;
   int m_homeing_button = -1;
+  int m_pc_node_id = -1;
 
   volatile bool do_run = true;
   bool is_homing_active = false;
