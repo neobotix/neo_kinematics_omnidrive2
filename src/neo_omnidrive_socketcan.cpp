@@ -806,6 +806,15 @@ private:
       configure_watchdog(wheel.steer);
     }
 
+    // send heartbeat immediately to prevent watchdog timeout
+    // before the next scheduled heartbeat in update()
+    {
+      can_msg_t msg;
+      msg.id = 0x700;
+      msg.length = 5;
+      can_transmit(msg);
+    }
+
     is_all_homed = true;
     is_homing_active = false;
     is_steer_reset_active = true;
