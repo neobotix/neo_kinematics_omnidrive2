@@ -838,6 +838,9 @@ private:
 
   void configure_PDO_mapping(const motor_t & motor)
   {
+    // Disable PDO
+    canopen_SDO_download(motor, 0x1800, 1, 0x80000000+motor.can_Tx_PDO1);
+
     // stop all emissions of TPDO1
     canopen_SDO_download(motor, 0x1A00, 0, 0);
 
@@ -854,6 +857,9 @@ private:
 
     // activate mapped objects
     canopen_SDO_download(motor, 0x1A00, 0, 2);
+
+    // Enable PDO
+    canopen_SDO_download(motor, 0x1800, 1, 0x40000000+motor.can_Tx_PDO1);
 
     can_sync();
   }
