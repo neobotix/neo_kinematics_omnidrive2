@@ -755,6 +755,7 @@ private:
 
     is_all_homed = false;
     is_homing_active = true;
+    is_heartbeat_failure = false;
   }
 
   void arm_homing(motor_t & motor)
@@ -801,6 +802,8 @@ private:
 
   void finish_homing()
   {
+    all_motors_off();
+
     stop_motion();
 
     // activate watchdog
@@ -809,15 +812,7 @@ private:
       configure_watchdog(wheel.steer);
     }
 
-    // send heartbeat immediately to prevent watchdog timeout
-    // before the next scheduled heartbeat in update()
-    {
-      can_msg_t msg;
-      msg.id = 0x700 + m_pc_node_id;
-      msg.length = 1;
-      msg.data[0] = 5;
-      can_transmit(msg);
-    }
+    all_motors_on();
 
     is_all_homed = true;
     is_homing_active = false;
@@ -866,8 +861,8 @@ private:
 
   void configure_watchdog(const motor_t & motor)
   {
-    // configure to fail after missing 3 heartbeats
-    const int heartbeat_time_ms = 4 * 1000 * m_heartbeat_divider / m_control_rate;
+    // configure to fail after missing 10 heartbeats
+    const int heartbeat_time_ms = 10 * 1000 * m_heartbeat_divider / m_control_rate;
     const int pc_node_id = m_pc_node_id;
 
     // consumer (PC) heartbeat time
@@ -1201,6 +1196,11 @@ private:
     size_t num_motor_updates = 0;
 
     for (auto & wheel : m_wheels) {
+      // check for emergency messages (CAN ID = 0x080 + node_id)
+      if (msg.id == (0x080 + wheel.drive.can_id) || msg.id == (0x080 + wheel.steer.can_id)) {
+        handle_emergency(wheel, msg);
+      }
+
       if (msg.id == wheel.drive.can_Tx_PDO1) {
         handle_PDO1(wheel.drive, msg);
       }
@@ -1307,6 +1307,34 @@ private:
     ::memcpy(&value, msg.data + offset, 4);
     return value;
   }
+  void handle_emergency(module_t & wheel, const can_msg_t & msg)
+  {
+    if (msg.length < 3) {
+      return;
+    }
+    // emergency error code (bytes 0-1, little endian)
+    const uint16_t error_code = static_cast<uint16_t>(msg.data[0]) |
+                                (static_cast<uint16_t>(msg.data[1]) << 8);
+
+    // determine which motor sent the emergency
+    const std::string & motor_name = (msg.id == (0x080 + wheel.drive.can_id))
+      ? wheel.drive.joint_name : wheel.steer.joint_name;
+
+    if (error_code == 0x8130) {
+      // heartbeat consumer timeout
+      RCLCPP_ERROR_STREAM(this->get_logger(),
+        motor_name << ": EMERGENCY - heartbeat consumer timeout (0x8130)");
+      is_heartbeat_failure = true;
+    } else if ((error_code & 0xFF00) == 0x8100) {
+      // other life guard / heartbeat errors
+      RCLCPP_ERROR_STREAM(this->get_logger(),
+        motor_name << ": EMERGENCY - life guard error (0x" << std::hex << error_code << std::dec << ")");
+      is_heartbeat_failure = true;
+    } else {
+      RCLCPP_ERROR_STREAM(this->get_logger(),
+        motor_name << ": EMERGENCY - error code 0x" << std::hex << error_code << std::dec);
+    }
+  }
 
   void handle_PDO1(motor_t & motor, const can_msg_t & msg)
   {
@@ -1352,6 +1380,10 @@ private:
 
   void evaluate_status(motor_t & motor, int32_t prev_status)
   {
+    RCLCPP_DEBUG_THROTTLE(
+      this->get_logger(), *this->get_clock(), 3000,
+      "%s status: 0x%X", motor.joint_name.c_str(), motor.curr_status);
+
     if (motor.curr_status & 1) {
       if (motor.curr_status != prev_status) {
         if ((motor.curr_status & 0xE) == 2) {
@@ -1399,6 +1431,7 @@ private:
           RCLCPP_WARN_STREAM(this->get_logger(), motor.joint_name << ": operation disabled");
         }
         motor.state = ST_OPERATION_DISABLED;
+	      RCLCPP_DEBUG_STREAM(this->get_logger(), motor.joint_name << ": operation disabled");
       }
     }
   }
@@ -1566,6 +1599,7 @@ private:
   bool is_motor_reset = true;
   bool is_trajectory_timeout = false;
   bool is_stopped = true;
+  bool is_heartbeat_failure = false;
 
   uint64_t m_sync_counter = 0;
   rclcpp::Time m_last_sync_time;
