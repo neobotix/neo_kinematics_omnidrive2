@@ -814,16 +814,6 @@ private:
 
     all_motors_on();
 
-    // send heartbeat immediately to prevent watchdog timeout
-    // before the next scheduled heartbeat in update()
-    {
-      can_msg_t msg;
-      msg.id = 0x700 + m_pc_node_id;
-      msg.length = 1;
-      msg.data[0] = 5;
-      can_transmit(msg);
-    }
-
     is_all_homed = true;
     is_homing_active = false;
     is_steer_reset_active = true;
