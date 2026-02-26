@@ -1326,9 +1326,9 @@ private:
         motor_name << ": EMERGENCY - heartbeat consumer timeout (0x8130)");
       is_heartbeat_failure = true;
     } else if ((error_code & 0xFF00) == 0x8100) {
-      // other life guard / heartbeat errors
+      // Communication error
       RCLCPP_ERROR_STREAM(this->get_logger(),
-        motor_name << ": EMERGENCY - life guard error (0x" << std::hex << error_code << std::dec << ")");
+        motor_name << ": EMERGENCY - communication error (0x" << std::hex << error_code << std::dec << ")");
       is_heartbeat_failure = true;
     } else {
       RCLCPP_ERROR_STREAM(this->get_logger(),
