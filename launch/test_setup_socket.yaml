@@ -18,6 +18,7 @@ neo_omnidrive_socketcan_node:
     cmd_timeout: 0.2
     trajectory_timeout: 0.1
     home_vel: -1.0
+    pc_node_id: 9
 
     drive0:
       can_id: 2
