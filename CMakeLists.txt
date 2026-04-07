@@ -29,7 +29,6 @@ add_executable(neo_omnidrive_node src/neo_omnidrive_node.cpp)
 # add_executable(neo_omnidrive_simulation_node src/neo_omnidrive_simulation_node.cpp)
 add_executable(neo_omnidrive_socketcan_node src/neo_omnidrive_socketcan.cpp)
 
-# ToDo for Simulation of Omnidrives
 # ament_target_dependencies(neo_omnidrive_simulation_node
 #   rclcpp
 #   tf2_ros
@@ -41,38 +40,32 @@ add_executable(neo_omnidrive_socketcan_node src/neo_omnidrive_socketcan.cpp)
 #   neo_common2
 #   angles)
 
-target_link_libraries(neo_omnidrive_node PUBLIC
-  ${geometry_msgs_TARGETS}
-  ${nav_msgs_TARGETS}
-  ${neo_msgs2_TARGETS}
-  ${neo_srvs2_TARGETS}
-  ${sensor_msgs_TARGETS}
-  ${std_msgs_TARGETS}
-  ${trajectory_msgs_TARGETS}
-  angles::angles
-  rclcpp::rclcpp
-  sensor_msgs::sensor_msgs_library
-  tf2_geometry_msgs::tf2_geometry_msgs
-  tf2_ros::static_transform_broadcaster_node
-  tf2_ros::tf2_ros
-  neo_common2::neo_common2
-)
+ament_target_dependencies(neo_omnidrive_node
+  rclcpp
+  tf2_ros
+  sensor_msgs
+  geometry_msgs
+  std_msgs
+  neo_msgs2
+  neo_srvs2
+  nav_msgs
+  trajectory_msgs
+  tf2_geometry_msgs
+  neo_common2
+  angles)
 
-target_link_libraries(neo_omnidrive_socketcan_node PUBLIC
-  ${geometry_msgs_TARGETS}
-  ${nav_msgs_TARGETS}
-  ${neo_msgs2_TARGETS}
-  ${sensor_msgs_TARGETS}
-  ${std_msgs_TARGETS}
-  ${trajectory_msgs_TARGETS}
-  angles::angles
-  rclcpp::rclcpp
-  sensor_msgs::sensor_msgs_library
-  tf2_geometry_msgs::tf2_geometry_msgs
-  tf2_ros::static_transform_broadcaster_node
-  tf2_ros::tf2_ros
-  neo_common2::neo_common2
-)
+ament_target_dependencies(neo_omnidrive_socketcan_node
+  rclcpp
+  tf2_ros
+  sensor_msgs
+  neo_msgs2
+  geometry_msgs
+  std_msgs
+  nav_msgs
+  trajectory_msgs
+  tf2_geometry_msgs
+  neo_common2
+  angles)
 
 ament_export_include_directories(include)
 
