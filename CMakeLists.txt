@@ -9,15 +9,11 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(rclcpp_action REQUIRED)
-find_package(rclcpp_lifecycle REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
-find_package(visualization_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(trajectory_msgs REQUIRED)
-find_package(builtin_interfaces REQUIRED)
 find_package(neo_srvs2 REQUIRED)
 find_package(neo_msgs2 REQUIRED)
 find_package(neo_common2 REQUIRED)
@@ -44,34 +40,22 @@ add_executable(neo_omnidrive_socketcan_node src/neo_omnidrive_socketcan.cpp)
 target_link_libraries(neo_omnidrive_node PUBLIC
   ${geometry_msgs_TARGETS}
   ${nav_msgs_TARGETS}
-  ${neo_msgs2_TARGETS}
   ${neo_srvs2_TARGETS}
   ${sensor_msgs_TARGETS}
-  ${std_msgs_TARGETS}
   ${trajectory_msgs_TARGETS}
   angles::angles
   rclcpp::rclcpp
-  sensor_msgs::sensor_msgs_library
   tf2_geometry_msgs::tf2_geometry_msgs
-  tf2_ros::static_transform_broadcaster_node
   tf2_ros::tf2_ros
   neo_common2::neo_common2
 )
 
 target_link_libraries(neo_omnidrive_socketcan_node PUBLIC
-  ${geometry_msgs_TARGETS}
-  ${nav_msgs_TARGETS}
   ${neo_msgs2_TARGETS}
   ${sensor_msgs_TARGETS}
-  ${std_msgs_TARGETS}
   ${trajectory_msgs_TARGETS}
   angles::angles
   rclcpp::rclcpp
-  sensor_msgs::sensor_msgs_library
-  tf2_geometry_msgs::tf2_geometry_msgs
-  tf2_ros::static_transform_broadcaster_node
-  tf2_ros::tf2_ros
-  neo_common2::neo_common2
 )
 
 ament_export_include_directories(include)
