@@ -47,8 +47,8 @@ target_link_libraries(neo_omnidrive_node PUBLIC
   rclcpp::rclcpp
   tf2_geometry_msgs::tf2_geometry_msgs
   tf2_ros::tf2_ros
-  neo_common2::neo_common2
 )
+target_include_directories(neo_omnidrive_node PUBLIC ${neo_common2_INCLUDE_DIRS})
 
 target_link_libraries(neo_omnidrive_socketcan_node PUBLIC
   ${neo_msgs2_TARGETS}
