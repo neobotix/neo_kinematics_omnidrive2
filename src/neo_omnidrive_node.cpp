@@ -43,7 +43,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include <nav_msgs/msg/odometry.hpp>
-#include <geometry_msgs/msg/twist.hpp>
+#include <geometry_msgs/msg/twist_stamped.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
@@ -151,7 +151,7 @@ public:
       "drives/joint_trajectory", 1);
     m_tf_odom_broadcaster = std::make_shared<tf2_ros::TransformBroadcaster>(this);
     m_sub_cmd_vel =
-      this->create_subscription<geometry_msgs::msg::Twist>(
+      this->create_subscription<geometry_msgs::msg::TwistStamped>(
       "cmd_vel", 1,
       std::bind(&NeoOmniDriveNode::cmd_vel_callback, this, _1));
     m_sub_joint_state =
@@ -255,13 +255,13 @@ public:
   }
 
 private:
-  void cmd_vel_callback(const geometry_msgs::msg::Twist::SharedPtr twist)
+  void cmd_vel_callback(const geometry_msgs::msg::TwistStamped::SharedPtr twist)
   {
     std::lock_guard<std::mutex> lock(m_node_mutex);
     m_last_cmd_time = rclcpp::Clock().now();
-    m_last_cmd_vel.linear.x = twist->linear.x;
-    m_last_cmd_vel.linear.y = twist->linear.y;
-    m_last_cmd_vel.angular.z = twist->angular.z;
+    m_last_cmd_vel.linear.x = twist->twist.linear.x;
+    m_last_cmd_vel.linear.y = twist->twist.linear.y;
+    m_last_cmd_vel.angular.z = twist->twist.angular.z;
   }
 
   void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr joint_state)
@@ -470,7 +470,7 @@ private:
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr m_pub_odometry;
   rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr m_pub_joint_trajectory;
 
-  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_sub_cmd_vel;
+  rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr m_sub_cmd_vel;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr m_sub_joint_state;
   rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr m_sub_joy;
 
