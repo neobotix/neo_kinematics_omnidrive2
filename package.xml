@@ -16,23 +16,18 @@
 
     <buildtool_depend>ament_cmake</buildtool_depend>
 
-    <exec_depend>rclcpp</exec_depend>
-    <exec_depend>rclcpp_action</exec_depend>
-    <exec_depend>rclcpp_lifecycle</exec_depend>
-    <exec_depend>visualization_msgs</exec_depend>
-    <exec_depend>geometry_msgs</exec_depend>
-    <exec_depend>std_msgs</exec_depend>
-    <exec_depend>nav_msgs</exec_depend>
-    <exec_depend>sensor_msgs</exec_depend>
-    <exec_depend>trajectory_msgs</exec_depend>
-    <exec_depend>builtin_interfaces</exec_depend>
-    <exec_depend>tf2</exec_depend>
-    <exec_depend>tf2_ros</exec_depend>
-    <exec_depend>tf2_geometry_msgs</exec_depend>
-    <exec_depend>neo_srvs2</exec_depend>
-    <exec_depend>neo_msgs2</exec_depend>
-    <exec_depend>neo_common2</exec_depend>
-    <exec_depend>angles</exec_depend>
+    <depend>rclcpp</depend>
+    <depend>std_msgs</depend>
+    <depend>geometry_msgs</depend>
+    <depend>nav_msgs</depend>
+    <depend>sensor_msgs</depend>
+    <depend>trajectory_msgs</depend>
+    <depend>tf2_ros</depend>
+    <depend>tf2_geometry_msgs</depend>
+    <depend>neo_srvs2</depend>
+    <depend>neo_msgs2</depend>
+    <depend>neo_common2</depend>
+    <depend>angles</depend>
 
     <export>
      <build_type>ament_cmake</build_type>
