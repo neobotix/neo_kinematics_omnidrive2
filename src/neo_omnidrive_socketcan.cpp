@@ -266,7 +266,7 @@ public:
     int32_t can_Rx_PDO2 = -1;
     int32_t can_Tx_SDO = -1;
     int32_t can_Rx_SDO = -1;
-    int32_t gear_ratio = 0;         // gear ratio
+    double gear_ratio = 0;         // gear ratio
     double torque_constant = 0;       // conversion factor from current to torque
 
     motor_state_e state = ST_PRE_INITIALIZED;
