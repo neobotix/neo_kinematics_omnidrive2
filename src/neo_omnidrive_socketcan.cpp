@@ -876,11 +876,6 @@ private:
     // motor behavior after heartbeat failure: "quick stop"
     canopen_SDO_download(motor, 0x6007, 0, 3);
 
-    // activate emergency events: "heartbeat event"
-    // Object 0x2F21 = "Emergency Events" which cause an Emergency Message
-    // Bit 3 is responsible for Heartbeart-Failure.--> Hex 0x08
-    canopen_SDO_download(motor, 0x2F21, 0, 0x08);
-
     can_sync();
   }
 
@@ -891,11 +886,6 @@ private:
 
     // Error Behavior: No state change
     canopen_SDO_download(motor, 0x1029, 1, 1);
-
-    // Deacivate emergency events: "heartbeat event"
-    // Object 0x2F21 = "Emergency Events" which cause an Emergency Message
-    // Bit 3 is responsible for Heartbeart-Failure.
-    canopen_SDO_download(motor, 0x2F21, 0, 0x00);
 
     can_sync();
   }
