@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.20)
 project(neo_kinematics_omnidrive2)
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -17,6 +17,7 @@ find_package(trajectory_msgs REQUIRED)
 find_package(neo_srvs2 REQUIRED)
 find_package(neo_msgs2 REQUIRED)
 find_package(neo_common2 REQUIRED)
+find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(angles REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
@@ -38,11 +39,11 @@ add_executable(neo_omnidrive_socketcan_node src/neo_omnidrive_socketcan.cpp)
 #   angles)
 
 target_link_libraries(neo_omnidrive_node PUBLIC
-  ${geometry_msgs_TARGETS}
-  ${nav_msgs_TARGETS}
-  ${neo_srvs2_TARGETS}
-  ${sensor_msgs_TARGETS}
-  ${trajectory_msgs_TARGETS}
+  geometry_msgs::geometry_msgs
+  nav_msgs::nav_msgs
+  neo_srvs2::neo_srvs2
+  sensor_msgs::sensor_msgs
+  trajectory_msgs::trajectory_msgs
   angles::angles
   rclcpp::rclcpp
   tf2_geometry_msgs::tf2_geometry_msgs
@@ -51,9 +52,9 @@ target_link_libraries(neo_omnidrive_node PUBLIC
 )
 
 target_link_libraries(neo_omnidrive_socketcan_node PUBLIC
-  ${neo_msgs2_TARGETS}
-  ${sensor_msgs_TARGETS}
-  ${trajectory_msgs_TARGETS}
+  neo_msgs2::neo_msgs2
+  sensor_msgs::sensor_msgs
+  trajectory_msgs::trajectory_msgs
   angles::angles
   rclcpp::rclcpp
 )

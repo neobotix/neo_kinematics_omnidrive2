@@ -149,11 +149,21 @@ public:
     m_pub_odometry = this->create_publisher<nav_msgs::msg::Odometry>("odom", 1);
     m_pub_joint_trajectory = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
       "drives/joint_trajectory", 1);
-    m_tf_odom_broadcaster = std::make_shared<tf2_ros::TransformBroadcaster>(this);
-    m_sub_cmd_vel =
+    m_tf_odom_broadcaster = std::make_shared<tf2_ros::TransformBroadcaster>(*this);
+    if (this->declare_parameter<bool>("enable_stamped_cmd_vel", true)) {
+      m_sub_cmd_vel =
       this->create_subscription<geometry_msgs::msg::TwistStamped>(
       "cmd_vel", 1,
       std::bind(&NeoOmniDriveNode::cmd_vel_callback, this, _1));
+    } else {
+      m_sub_cmd_vel_unstamped = this->create_subscription<geometry_msgs::msg::Twist>(
+        "cmd_vel", 1, [this](geometry_msgs::msg::Twist::SharedPtr message) {
+          auto stamped = std::make_shared<geometry_msgs::msg::TwistStamped>();
+          stamped->header.stamp = this->now();
+          stamped->twist = *message;
+          cmd_vel_callback(stamped);
+        });
+    }
     m_sub_joint_state =
       this->create_subscription<sensor_msgs::msg::JointState>(
       "drives/joint_states", 1,
@@ -471,6 +481,7 @@ private:
   rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr m_pub_joint_trajectory;
 
   rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr m_sub_cmd_vel;
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_sub_cmd_vel_unstamped;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr m_sub_joint_state;
   rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr m_sub_joy;
 
