@@ -29,7 +29,9 @@
     <depend>neo_common2</depend>
     <depend>angles</depend>
 
-    <export>
+    <depend>tf2</depend>
+
+  <export>
      <build_type>ament_cmake</build_type>
     </export>
 
